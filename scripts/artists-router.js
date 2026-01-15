@@ -1,8 +1,8 @@
 const dataProvider = require("./data-provider.js");
 const { dbAll, dbGet } = dataProvider;
 
-// Queries
-// Note: These do not end with a ';'
+// queries
+// note: these do not end with a ';'
 const artistSql = `
     SELECT
         a.artist_id,

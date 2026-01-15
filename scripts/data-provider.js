@@ -4,8 +4,7 @@ const sqlite3 = require("sqlite3").verbose();
 const DB_PATH = path.join(__dirname, "../data/songs-2026.db");
 const db = new sqlite3.Database(DB_PATH);
 
-// Wrapper functions
-
+// wrapper functions
 function dbAll(sql, params = []) {
     return new Promise( (resolve, reject) => {
         db.all(sql, params, (err, rows) => {

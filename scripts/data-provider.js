@@ -6,6 +6,9 @@ const db = new sqlite3.Database(DB_PATH);
 
 // wrapper functions
 function dbAll(sql, params = []) {
+    
+    // works out to cleaner code using async and await
+    // instead of using callbacks
     return new Promise( (resolve, reject) => {
         db.all(sql, params, (err, rows) => {
             if (err) reject(err);

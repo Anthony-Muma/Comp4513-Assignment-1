@@ -1,6 +1,10 @@
 const dataProvider = require("./data-provider.js");
 const { dbAll, dbGet } = dataProvider;
 
+// used in tangent with resp.status
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
+// 418 I'm a teapot ???
+
 // queries
 // note: these do not end with a ';'
 const artistSql = `
@@ -41,6 +45,7 @@ function handleAllArtist(app) {
             const rows = await dbAll(artistSql + ";");
             resp.json(rows);
         } catch (error) {
+            console.log(error.message);
             resp.status(500).json({ error: error.message });
         }     
     });
@@ -52,7 +57,7 @@ function handleArtistRef(app) {
             const ref = [req.params.ref];
             const row = await dbGet(artistSql + "WHERE a.artist_id=?;", ref);
             if (row) resp.json(row);
-            else resp.status(400).json({ error: `artist ${ref} was not found` });
+            else resp.status(404).json({ error: `artist ${ref} was not found` });
         } catch (error) {
             console.log(error.message);
             resp.status(500).json({ error: error.message });
@@ -66,7 +71,7 @@ function handleAverageRef(app) {
             const ref = [req.params.ref];
             const row = await dbGet(averagesSql + ";", ref);
             if (row) resp.json(row);
-            else resp.status(400).json({ error: `artist ${ref} was not found` });
+            else resp.status(404).json({ error: `artist ${ref} was not found` });
         } catch (error) {
             console.log(error.message);
             resp.status(500).json({ error: error.message });

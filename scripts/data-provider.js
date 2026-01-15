@@ -15,6 +15,16 @@ function dbAll(sql, params = []) {
     });
 }
 
+function dbGet(sql, params) {
+    return new Promise( (resolve, reject) => {
+        db.get(sql, params, (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        });
+    });
+}
+
+
 // function dbAll(sql, params, callback) {
 //     db.all(sql, params, callback);
 // }
@@ -28,5 +38,6 @@ function dbAll(sql, params = []) {
 // }
 
 module.exports = {
-    dbAll
+    dbAll,
+    dbGet
 }

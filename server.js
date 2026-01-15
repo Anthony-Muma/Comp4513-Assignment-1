@@ -5,8 +5,9 @@ const app = express();
 
 // set up route handling 
 const artistRouter = require('./scripts/artists-router.js');
-const { handleAllArtist } = artistRouter;
+const { handleAllArtist, handleArtistRef } = artistRouter;
 handleAllArtist(app);
+handleArtistRef(app);
 
 // use express to listen to port 
 let port = process.env.PORT; 

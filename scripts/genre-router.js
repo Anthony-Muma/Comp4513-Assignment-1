@@ -12,7 +12,7 @@ const genreSql = `
 function handleAllGenres(app) {
     app.get('/api/genres', async (req, resp) => {
         try {
-            const rows = await dbAll(artistSql + ";");
+            const rows = await dbAll(genreSql);
             resp.json(rows);
         } catch (error) {
             console.log(error.message);

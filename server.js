@@ -14,6 +14,10 @@ const genreRouter = require('./scripts/genre-router.js');
 const { handleAllGenres } = genreRouter;
 handleAllGenres(app);
 
+const playlistRouter = require('./scripts/playlists-router.js');
+const { handlePlaylistsRef } = playlistRouter;
+handlePlaylistsRef(app);
+
 
 
 // use express to listen to port 

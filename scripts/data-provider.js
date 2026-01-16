@@ -42,4 +42,4 @@ function dbGet(sql, params) {
 module.exports = {
     dbAll,
     dbGet
-}
+};

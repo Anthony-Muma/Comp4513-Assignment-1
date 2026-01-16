@@ -15,7 +15,7 @@ function handleAllGenres(app) {
             const rows = await dbAll(genreSql);
             resp.json(rows);
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
             resp.status(500).json({ error: error.message });
         }     
     });

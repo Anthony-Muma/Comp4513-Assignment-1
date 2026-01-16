@@ -45,7 +45,7 @@ function handleAllArtist(app) {
             const rows = await dbAll(artistSql + ";");
             resp.json(rows);
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
             resp.status(500).json({ error: error.message });
         }     
     });
@@ -59,13 +59,13 @@ function handleArtistRef(app) {
             if (row) resp.json(row);
             else resp.status(404).json({ error: `artist ${ref} was not found` });
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
             resp.status(500).json({ error: error.message });
         }     
     });
 }
 
-function handleAverageRef(app) {
+function handleArtistRefAverage(app) {
     app.get('/api/artists/averages/:ref', async (req, resp) => {
         try {
             const ref = [req.params.ref];
@@ -73,7 +73,7 @@ function handleAverageRef(app) {
             if (row) resp.json(row);
             else resp.status(404).json({ error: `artist ${ref} was not found` });
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
             resp.status(500).json({ error: error.message });
         }     
     });
@@ -82,5 +82,5 @@ function handleAverageRef(app) {
 module.exports = {
     handleAllArtist,
     handleArtistRef,
-    handleAverageRef
-}
+    handleArtistRefAverage
+};

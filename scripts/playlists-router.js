@@ -27,7 +27,7 @@ function handlePlaylistsRef(app) {
             if (rows) resp.json(rows);
             else resp.status(404).json({ error: `playlist ${ref} was not found` });
         } catch (error) {
-            console.log(error.message);
+            console.error(error.message);
             resp.status(500).json({ error: error.message });
         }     
     });

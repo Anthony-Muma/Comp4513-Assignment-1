@@ -18,7 +18,11 @@ const playlistRouter = require('./scripts/playlists-router.js');
 const { handlePlaylistsRef } = playlistRouter;
 handlePlaylistsRef(app);
 
-
+const songsRouter = require('./scripts/songs-router.js');
+const { handleAllSongs, handleAllSongsSort, handleSongsRef } = songsRouter;
+handleAllSongs(app);
+handleAllSongsSort(app);
+handleSongsRef(app);
 
 // use express to listen to port 
 let port = process.env.PORT; 

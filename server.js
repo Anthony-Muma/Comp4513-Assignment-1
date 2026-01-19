@@ -19,10 +19,15 @@ const { handlePlaylistsRef } = playlistRouter;
 handlePlaylistsRef(app);
 
 const songsRouter = require('./scripts/songs-router.js');
-const { handleAllSongs, handleAllSongsSort, handleSongsRef } = songsRouter;
+const { handleAllSongs, handleAllSongsSort, handleSongsRef, handleSongsSearchBegin, handleSongsSearchAny, handleSongsSearchYear, handleSongsArtistRef, handleSongsGenreRef } = songsRouter;
 handleAllSongs(app);
 handleAllSongsSort(app);
 handleSongsRef(app);
+handleSongsSearchBegin(app);
+handleSongsSearchAny(app);
+handleSongsSearchYear(app);
+handleSongsArtistRef(app);
+handleSongsGenreRef(app);
 
 const moodRouter = require('./scripts/mood-router.js');
 const { handleDancingMoodRef, handleHappyMoodRef, handleCoffeeMoodRef, handleStudyingMoodRef} = moodRouter;
@@ -30,6 +35,7 @@ handleDancingMoodRef(app);
 handleHappyMoodRef(app);
 handleCoffeeMoodRef(app);
 handleStudyingMoodRef(app);
+
 
 
 // use express to listen to port 

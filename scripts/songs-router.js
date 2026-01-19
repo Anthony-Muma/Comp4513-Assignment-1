@@ -76,9 +76,83 @@ function handleSongsRef(app) {
     });
 }
 
+function handleSongsSearchBegin(app) {
+    app.get('/api/songs/search/begin/:substring', async (req, resp) => {
+        try {
+            const substring = `${req.params.substring.toUpperCase()}%`;
+            const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?;", [substring]);
+            resp.json(rows);
+            // if (row) resp.json(row);
+            // else resp.status(400).json({ error: `song ${ref} was not found` });
+        } catch (error) {
+            console.error(error.message);
+            resp.status(500).json({ error: error.message });
+        }     
+    });
+}
+
+function handleSongsSearchAny(app) {
+    app.get('/api/songs/search/any/:substring', async (req, resp) => {
+        try {
+            const substring = `%${req.params.substring.toUpperCase()}%`;
+            const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?;", [substring]);
+            resp.json(rows);
+        } catch (error) {
+            console.error(error.message);
+            resp.status(500).json({ error: error.message });
+        }     
+    });
+}
+
+function handleSongsSearchYear(app) {
+    app.get('/api/songs/search/year/:substring', async (req, resp) => {
+        try {
+            const substring = req.params.substring;
+            const rows = await dbAll(SONG_SQL + "WHERE s.year LIKE ?;", [substring]);
+            resp.json(rows);
+        } catch (error) {
+            console.error(error.message);
+            resp.status(500).json({ error: error.message });
+        }     
+    });
+}
+
+function handleSongsArtistRef(app) {
+    app.get('/api/songs/artist/:ref', async (req, resp) => {
+        try {
+            const ref = req.params.ref;
+            const rows = await dbAll(SONG_SQL + "WHERE s.artist_id=?;", [ref]);
+            if (rows) resp.json(rows);
+            else resp.status(400).json({ error: `song ${ref} was not found` });
+        } catch (error) {
+            console.error(error.message);
+            resp.status(500).json({ error: error.message });
+        }     
+    });
+}
+
+function handleSongsGenreRef(app) {
+    app.get('/api/songs/genre/:ref', async (req, resp) => {
+        try {
+            const ref = req.params.ref;
+            const rows = await dbAll(SONG_SQL + "WHERE s.genre_id=?;", [ref]);
+            if (rows) resp.json(rows);
+            else resp.status(400).json({ error: `song ${ref} was not found` });
+        } catch (error) {
+            console.error(error.message);
+            resp.status(500).json({ error: error.message });
+        }     
+    });
+}
 
 module.exports = {
     handleAllSongs,
     handleAllSongsSort,
-    handleSongsRef
+    handleSongsRef,
+    handleSongsSearchBegin,
+    handleSongsSearchAny,
+    handleSongsSearchYear,
+    handleSongsArtistRef,
+    handleSongsGenreRef
+
 };

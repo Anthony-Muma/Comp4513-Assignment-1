@@ -24,6 +24,14 @@ handleAllSongs(app);
 handleAllSongsSort(app);
 handleSongsRef(app);
 
+const moodRouter = require('./scripts/mood-router.js');
+const { handleDancingMoodRef, handleHappyMoodRef, handleCoffeeMoodRef, handleStudyingMoodRef} = moodRouter;
+handleDancingMoodRef(app);
+handleHappyMoodRef(app);
+handleCoffeeMoodRef(app);
+handleStudyingMoodRef(app);
+
+
 // use express to listen to port 
 let port = process.env.PORT; 
 app.listen(port, () => { 

@@ -2,7 +2,7 @@ const dataProvider = require("./data-provider.js");
 const { dbAll, dbGet } = dataProvider;
 
 // note: these do not end with a ';'
-const songSql = `
+const SONG_SQL = `
     SELECT 
         s.song_id,
         s.title,
@@ -27,7 +27,7 @@ const songSql = `
 function handleAllSongs(app) {
     app.get('/api/songs', async (req, resp) => {
         try {
-            const rows = await dbAll(songSql + "ORDER BY 2;");
+            const rows = await dbAll(SONG_SQL + "ORDER BY 2;");
             resp.json(rows);
         } catch (error) {
             console.error(error.message);
@@ -36,34 +36,25 @@ function handleAllSongs(app) {
     });
 }
 
+const SORT_COLUMNS = {
+    id: "s.song_id",
+    title: "s.title",
+    artist: "a.artist_name",
+    genre: "g.genre_name",
+    year: "s.year",
+    duration: "s.duration"
+};
+
 function handleAllSongsSort(app) {
     app.get('/api/songs/sort/:order', async (req, resp) => {
         try {
-            let chosenColumn;
-            switch (req.params.order) {
-                case "id":
-                    chosenColumn = "s.song_id"
-                    break;
-                case "title":
-                    chosenColumn = "s.title"
-                    break;
-                case "artist":
-                    chosenColumn = "a.artist_name"
-                    break;
-                case "genre":
-                    chosenColumn = "g.genre_name"
-                    break;
-                case "year":
-                    chosenColumn = "s.year"
-                    break;
-                case "duration":
-                    chosenColumn = "s.duration"
-                    break;
-                default:
-                    resp.status(404).json({ error: `could not order by ${req.params.order}` });
+            const order = req.params.order;
+            const columnToOrderBy = SORT_COLUMNS[order];
+            if (!columnToOrderBy) resp.status(400).json({ error: `could not order by ${req.params.order}` });
+            else {
+                const rows = await dbAll(SONG_SQL + `ORDER BY ${columnToOrderBy};`);
+                resp.json(rows);
             }
-            const rows = await dbAll(songSql + `ORDER BY ${chosenColumn};`);
-            resp.json(rows);
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -75,9 +66,9 @@ function handleSongsRef(app) {
     app.get('/api/songs/:ref', async (req, resp) => {
         try {
             const ref = [req.params.ref];
-            const row = await dbGet(songSql + "WHERE s.song_id=?;", ref);
+            const row = await dbGet(SONG_SQL + "WHERE s.song_id=?;", ref);
             if (row) resp.json(row);
-            else resp.status(404).json({ error: `song ${ref} was not found` });
+            else resp.status(400).json({ error: `song ${ref} was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });

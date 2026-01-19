@@ -25,7 +25,7 @@ function handlePlaylistsRef(app) {
             const ref = [req.params.ref];
             const rows = await dbAll(genreSql, ref);
             if (rows) resp.json(rows);
-            else resp.status(404).json({ error: `playlist ${ref} was not found` });
+            else resp.status(400).json({ error: `playlist ${ref} was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });

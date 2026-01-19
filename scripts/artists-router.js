@@ -57,7 +57,7 @@ function handleArtistRef(app) {
             const ref = [req.params.ref];
             const row = await dbGet(artistSql + "WHERE a.artist_id=?;", ref);
             if (row) resp.json(row);
-            else resp.status(404).json({ error: `artist ${ref} was not found` });
+            else resp.status(400).json({ error: `artist ${ref} was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -71,7 +71,7 @@ function handleArtistRefAverage(app) {
             const ref = [req.params.ref];
             const row = await dbGet(averagesSql + ";", ref);
             if (row) resp.json(row);
-            else resp.status(404).json({ error: `artist ${ref} was not found` });
+            else resp.status(400).json({ error: `artist ${ref} was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });

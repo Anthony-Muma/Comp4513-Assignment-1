@@ -1,5 +1,5 @@
 const dataProvider = require("./data-provider.js");
-const { dbAll, dbGet } = dataProvider;
+const { dbAll } = dataProvider;
 
 const SONG_SQL = `
     SELECT 
@@ -23,6 +23,7 @@ const SONG_SQL = `
         JOIN artists a ON a.artist_id = s.artist_id
         JOIN genres g ON g.genre_id = s.genre_id
 `
+
 function handleAllSongs(app) {
     app.get('/api/songs', async (req, resp) => {
         try {
@@ -80,7 +81,7 @@ function handleSongsSearchBegin(app) {
         try {
             const substring = `${req.params.substring.toUpperCase()}%`;
             const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", [substring]);
-            if (rows.length > 0) resp.json(row);
+            if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `song ${substring} was not found` });
         } catch (error) {
             console.error(error.message);
@@ -94,7 +95,7 @@ function handleSongsSearchAny(app) {
         try {
             const substring = `%${req.params.substring.toUpperCase()}%`;
             const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", [substring]);
-            if (rows.length > 0) resp.json(row);
+            if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `song ${substring} was not found` });
         } catch (error) {
             console.error(error.message);

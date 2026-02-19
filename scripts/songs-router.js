@@ -1,6 +1,7 @@
 const dataProvider = require("./data-provider.js");
 const { dbAll } = dataProvider;
 
+// SQL for song used by most/all song routes
 const SONG_SQL = `
     SELECT 
         s.song_id,
@@ -24,6 +25,12 @@ const SONG_SQL = `
         JOIN genres g ON g.genre_id = s.genre_id
 `
 
+/**
+ * ***./api/songs***
+ * 
+ * Returns all data for all the songs sorted by song title.
+ * @param {import('express').Application} app - Express app
+ */
 function handleAllSongs(app) {
     app.get('/api/songs', async (req, resp) => {
         try {
@@ -36,6 +43,7 @@ function handleAllSongs(app) {
     });
 }
 
+// Used within handleAllSongsSort
 const SORT_COLUMNS = {
     id: "s.song_id",
     title: "s.title",
@@ -45,12 +53,19 @@ const SORT_COLUMNS = {
     duration: "s.duration"
 };
 
+/**
+ * ***./api/songs/sort/:order***
+ * 
+ * Returns all the songs sorted by order field. 
+ * Possible values are: id, title, artist (name), genre (name), year, duration
+ * @param {import('express').Application} app - Express app
+ */
 function handleAllSongsSort(app) {
     app.get('/api/songs/sort/:order', async (req, resp) => {
         try {
             const order = req.params.order.toLowerCase();
             const columnToOrderBy = SORT_COLUMNS[order];
-            if (!columnToOrderBy) resp.status(400).json({ error: `could not order by ${req.params.order}` });
+            if (!columnToOrderBy) resp.status(400).json({ error: `could not order songs by '${req.params.order}'` });
             else {
                 const rows = await dbAll(SONG_SQL + `ORDER BY ${columnToOrderBy}`);
                 resp.json(rows);
@@ -62,13 +77,21 @@ function handleAllSongsSort(app) {
     });
 }
 
+/**
+ * ***./api/songs/:ref***
+ * 
+ * Returns just the specified song using the song_id field, 
+ * 
+ * e.g., /api/songs/1028
+ * @param {import('express').Application} app - Express app
+ */
 function handleSongsRef(app) {
     app.get('/api/songs/:ref', async (req, resp) => {
         try {
             const ref = [req.params.ref];
             const rows = await dbAll(SONG_SQL + "WHERE s.song_id=?;", ref);
             if (rows.length > 0) resp.json(rows);
-            else resp.status(400).json({ error: `song ${ref} was not found` });
+            else resp.status(400).json({ error: `song with id '${ref}' was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -76,13 +99,21 @@ function handleSongsRef(app) {
     });
 }
 
+/**
+ * ***./api/songs/search/begin/:substring***
+ * 
+ * Returns the songs whose title (case insensitive) **begins** with the provided substring,
+ * 
+ * e.g., /api/songs/search/begin/lov
+ * @param {import('express').Application} app - Express app
+ */
 function handleSongsSearchBegin(app) {
     app.get('/api/songs/search/begin/:substring', async (req, resp) => {
         try {
             const substring = req.params.substring.toUpperCase();
             const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", [substring + "%"]);
             if (rows.length > 0) resp.json(rows);
-            else resp.status(400).json({ error: `song ${substring} was not found` });
+            else resp.status(400).json({ error: `song titles beginning with '${substring}' were not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -90,13 +121,21 @@ function handleSongsSearchBegin(app) {
     });
 }
 
+/**
+ * ***./api/songs/search/any/:substring***
+ * 
+ * Returns the songs whose title (case insensitive) **contains** with the provided substring,
+ * 
+ * e.g., /api/songs/search/any/lov
+ * @param {import('express').Application} app - Express app
+ */
 function handleSongsSearchAny(app) {
     app.get('/api/songs/search/any/:substring', async (req, resp) => {
         try {
             const substring = req.params.substring.toUpperCase();
             const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", ["%" + substring + "%"]);
             if (rows.length > 0) resp.json(rows);
-            else resp.status(400).json({ error: `song ${substring} was not found` });
+            else resp.status(400).json({ error: `song titles with '${substring}' were not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -104,13 +143,21 @@ function handleSongsSearchAny(app) {
     });
 }
 
+/**
+ * ***./api/songs/search/year/:substring***
+ * 
+ * Returns the songs whose year is equal to the provided substring, 
+ * 
+ * e.g., /api/songs/search/year/2017
+ * @param {import('express').Application} app - Express app
+ */
 function handleSongsSearchYear(app) {
     app.get('/api/songs/search/year/:substring', async (req, resp) => {
         try {
             const substring = req.params.substring;
             const rows = await dbAll(SONG_SQL + "WHERE s.year LIKE ?", [substring]);
             if (rows.length > 0) resp.json(rows);
-            else resp.status(400).json({ error: `song ${substring} was not found` });
+            else resp.status(400).json({ error: `songs with year '${substring}' were not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -118,13 +165,21 @@ function handleSongsSearchYear(app) {
     });
 }
 
+/**
+ * ***./api/songs/artist/:ref***
+ * 
+ * Returns all the songs for the specified artist, 
+ * 
+ * e.g., /api/songs/artists/129
+ * @param {import('express').Application} app - Express app
+ */
 function handleSongsArtistRef(app) {
     app.get('/api/songs/artist/:ref', async (req, resp) => {
         try {
             const ref = req.params.ref;
             const rows = await dbAll(SONG_SQL + "WHERE s.artist_id=?", [ref]);
             if (rows) resp.json(rows);
-            else resp.status(400).json({ error: `song ${ref} was not found` });
+            else resp.status(400).json({ error: `songs written by artist '${ref}' were not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -132,13 +187,21 @@ function handleSongsArtistRef(app) {
     });
 }
 
+/**
+ * ***./api/songs/genre/:ref***
+ * 
+ * Returns all the songs for the specified genre,
+ * 
+ * e.g., /api/songs/genre/115 
+ * @param {import('express').Application} app - Express app
+ */
 function handleSongsGenreRef(app) {
     app.get('/api/songs/genre/:ref', async (req, resp) => {
         try {
             const ref = req.params.ref;
             const rows = await dbAll(SONG_SQL + "WHERE s.genre_id=?", [ref]);
             if (rows) resp.json(rows);
-            else resp.status(400).json({ error: `song ${ref} was not found` });
+            else resp.status(400).json({ error: `song genre '${ref}' was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });

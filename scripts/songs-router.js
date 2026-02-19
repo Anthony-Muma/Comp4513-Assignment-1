@@ -23,6 +23,7 @@ const SONG_SQL = `
         songs s
         JOIN artists a ON a.artist_id = s.artist_id
         JOIN genres g ON g.genre_id = s.genre_id
+
 `
 
 /**
@@ -34,7 +35,7 @@ const SONG_SQL = `
 function handleAllSongs(app) {
     app.get('/api/songs', async (req, resp) => {
         try {
-            const rows = await dbAll(SONG_SQL + "ORDER BY s.title");
+            const rows = await dbAll(SONG_SQL + "ORDER BY s.title;");
             resp.json(rows);
         } catch (error) {
             console.error(error.message);
@@ -67,7 +68,7 @@ function handleAllSongsSort(app) {
             const columnToOrderBy = SORT_COLUMNS[order];
             if (!columnToOrderBy) resp.status(400).json({ error: `could not order songs by '${req.params.order}'` });
             else {
-                const rows = await dbAll(SONG_SQL + `ORDER BY ${columnToOrderBy}`);
+                const rows = await dbAll(SONG_SQL + `ORDER BY ${columnToOrderBy};`);
                 resp.json(rows);
             }
         } catch (error) {

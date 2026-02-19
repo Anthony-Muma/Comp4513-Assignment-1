@@ -1,13 +1,10 @@
 const dataProvider = require("./data-provider.js");
-const { dbAll, dbGet } = dataProvider;
+const { dbAll } = dataProvider;
 
-// used in tangent with resp.status
+// resp.status
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
-// 418 I'm a teapot ???
 
-// queries
-// note: these do not end with a ';'
-const artistSql = `
+const ARTIST_SQL = `
     SELECT
         a.artist_id,
         a.artist_name,
@@ -20,7 +17,7 @@ const artistSql = `
         JOIN types t ON a.artist_type_id = t.type_id
     `;
 
-const averagesSql = `
+const AVERAGES_SQL = `
     SELECT
         AVG(s.bpm) AS bpm,
         AVG(s.energy) AS energy,
@@ -39,10 +36,16 @@ const averagesSql = `
         a.artist_id=?
     `;
 
+/**
+ * ***./api/artists***
+ * 
+ * Returns all data for all artists sorted by artist_name.
+ * @param {import('express').Application} app - Express app
+ */
 function handleAllArtist(app) {
     app.get('/api/artists', async (req, resp) => {
         try {
-            const rows = await dbAll(artistSql + ";");
+            const rows = await dbAll(ARTIST_SQL + "ORDER BY 2");
             resp.json(rows);
         } catch (error) {
             console.error(error.message);
@@ -51,13 +54,21 @@ function handleAllArtist(app) {
     });
 }
 
+/**
+ * ***./api/artists/:ref***
+ * 
+ * Returns just the specified artist using the artist_id field,
+ * 
+ * e.g., /api/artists/129
+ * @param {import('express').Application} app - Express app
+ */
 function handleArtistRef(app) {
     app.get('/api/artists/:ref', async (req, resp) => {
         try {
-            const ref = [req.params.ref];
-            const row = await dbGet(artistSql + "WHERE a.artist_id=?;", ref);
-            if (row) resp.json(row);
-            else resp.status(400).json({ error: `artist ${ref} was not found` });
+            const ref = req.params.ref;
+            const rows = await dbAll(AVERAGES_SQL + "WHERE a.artist_id=?", [ref]);
+            if (rows.length > 0) resp.json(rows);
+            else resp.status(400).json({ error: `artist of id '${ref}' was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });
@@ -65,13 +76,22 @@ function handleArtistRef(app) {
     });
 }
 
+/**
+ * ***./api/artists/averages/:ref***
+ * 
+ * Returns the average values for bpm, energy, 
+ * danceability,loudness,liveness,valence,duration, 
+ * acousticness, speechineess, popularity for the specified 
+ * artist using the artist_id field
+ * @param {import('express').Application} app - Express app
+ */
 function handleArtistRefAverage(app) {
     app.get('/api/artists/averages/:ref', async (req, resp) => {
         try {
-            const ref = [req.params.ref];
-            const row = await dbGet(averagesSql + ";", ref);
-            if (row) resp.json(row);
-            else resp.status(400).json({ error: `artist ${ref} was not found` });
+            const ref = req.params.ref;
+            const rows = await dbAll(averagesSql, [ref]);
+            if (rows.length > 0) resp.json(rows);
+            else resp.status(400).json({ error: `artist of id '${ref}' was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });

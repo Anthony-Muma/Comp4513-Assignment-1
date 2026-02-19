@@ -23,7 +23,6 @@ const SONG_SQL = `
         songs s
         JOIN artists a ON a.artist_id = s.artist_id
         JOIN genres g ON g.genre_id = s.genre_id
-
 `
 
 /**
@@ -35,7 +34,7 @@ const SONG_SQL = `
 function handleAllSongs(app) {
     app.get('/api/songs', async (req, resp) => {
         try {
-            const rows = await dbAll(SONG_SQL + "ORDER BY s.title;");
+            const rows = await dbAll(SONG_SQL + "ORDER BY s.title COLLATE NOCASE ASC");
             resp.json(rows);
         } catch (error) {
             console.error(error.message);
@@ -47,9 +46,9 @@ function handleAllSongs(app) {
 // Used within handleAllSongsSort
 const SORT_COLUMNS = {
     id: "s.song_id",
-    title: "s.title",
-    artist: "a.artist_name",
-    genre: "g.genre_name",
+    title: "s.title COLLATE NOCASE ASC",
+    artist: "a.artist_name COLLATE NOCASE ASC",
+    genre: "g.genre_name COLLATE NOCASE ASC",
     year: "s.year",
     duration: "s.duration"
 };
@@ -68,7 +67,7 @@ function handleAllSongsSort(app) {
             const columnToOrderBy = SORT_COLUMNS[order];
             if (!columnToOrderBy) resp.status(400).json({ error: `could not order songs by '${req.params.order}'` });
             else {
-                const rows = await dbAll(SONG_SQL + `ORDER BY ${columnToOrderBy};`);
+                const rows = await dbAll(SONG_SQL + `ORDER BY ${columnToOrderBy}`);
                 resp.json(rows);
             }
         } catch (error) {
@@ -89,8 +88,8 @@ function handleAllSongsSort(app) {
 function handleSongsRef(app) {
     app.get('/api/songs/:ref', async (req, resp) => {
         try {
-            const ref = [req.params.ref];
-            const rows = await dbAll(SONG_SQL + "WHERE s.song_id=?;", ref);
+            const ref = req.params.ref;
+            const rows = await dbAll(SONG_SQL + "WHERE s.song_id=?", [ref]);
             if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `song with id '${ref}' was not found` });
         } catch (error) {

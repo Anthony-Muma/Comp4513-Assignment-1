@@ -1,8 +1,8 @@
 # COMP 4513 – Assignment #1: Spotify Songs Web API
 
 ![Node.js](https://img.shields.io/badge/Node.js-22.11.1-339933?logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express-5.2.1-000000?logo=express&logoColor=white)
-![Deployed on Render](https://img.shields.io/badge/Deployed%20on-Render-46E3B7?logo=render&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5.2.1-023E8A?logo=express&logoColor=white)
+![Deployed on Render](https://img.shields.io/badge/Deployed%20on-Render-FFA500?logo=render&logoColor=white)
 
 ## Overview
 

@@ -1,7 +1,7 @@
 const dataProvider = require("./data-provider.js");
 const { dbAll } = dataProvider;
 
-const GENRE_SQL = `SELECT genre_name FROM genres`;
+const GENRE_SQL = `SELECT * FROM genres`;
 
 /**
  * ***./api/genres***

@@ -19,7 +19,7 @@ const ARTIST_SQL = `
 
 const AVERAGES_SQL = `
     SELECT
-        a.artist_name
+        a.artist_name,
         ROUND(AVG(s.bpm), 2) AS avg_bpm,
         ROUND(AVG(s.energy), 2) AS avg_energy,
         ROUND(AVG(s.danceability), 2) AS avg_danceability,

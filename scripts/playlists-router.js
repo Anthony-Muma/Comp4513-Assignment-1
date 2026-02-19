@@ -1,7 +1,7 @@
 const dataProvider = require("./data-provider.js");
-const { dbAll, dbGet } = dataProvider;
+const { dbAll } = dataProvider;
 
-const genreSql = `
+const PLAYLIST_SQL = `
     SELECT
         p.playlist_id,
         s.song_id,
@@ -16,16 +16,25 @@ const genreSql = `
         JOIN artists a ON a.artist_id = s.artist_id
     WHERE 
         p.playlist_id=?
-    ;
 `;
 
+/**
+ * ***./api/playlists/:ref***
+ * 
+ * Returns all the songs for the specified playlist, 
+ * 
+ * e.g., /api/playlists/3
+ * 
+ * Return the following fields: playlist, song_id, title, artist name, genre name, year
+ * @param {import('express').Application} app - Express app
+ */
 function handlePlaylistsRef(app) {
     app.get('/api/playlists/:ref', async (req, resp) => {
         try {
             const ref = [req.params.ref];
-            const rows = await dbAll(genreSql, ref);
+            const rows = await dbAll(PLAYLIST_SQL, ref);
             if (rows) resp.json(rows);
-            else resp.status(400).json({ error: `playlist ${ref} was not found` });
+            else resp.status(400).json({ error: `playlist '${ref}' was not found` });
         } catch (error) {
             console.error(error.message);
             resp.status(500).json({ error: error.message });

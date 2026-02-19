@@ -1,7 +1,7 @@
 # COMP 4513 – Assignment #1: Spotify Songs Web API
 
-![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22.11.1-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5.2.1-000000?logo=express&logoColor=white)
 ![Deployed on Render](https://img.shields.io/badge/Deployed%20on-Render-46E3B7?logo=render&logoColor=white)
 
 ## Overview
@@ -38,6 +38,7 @@ This project is a RESTful Web API built with **Node.js** and **Express** that se
 │   └── types.csv
 ├── .env                       # Environment variables (not committed)
 ├── .gitignore
+├── package-lock.json
 ├── package.json
 └── README.md
 ```
@@ -116,7 +117,6 @@ This project is hosted on Render's free tier. The server may take **30–60 seco
 - [/api/songs/genre/115](https://comp4513-assignment-1.onrender.com/api/songs/genre/115)
 
 ### Playlists
-- [/api/playlists](https://comp4513-assignment-1.onrender.com/api/playlists)
 - [/api/playlists/3](https://comp4513-assignment-1.onrender.com/api/playlists/3)
 - [/api/playlists/35362](https://comp4513-assignment-1.onrender.com/api/playlists/35362)
 

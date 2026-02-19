@@ -13,7 +13,7 @@ This project is a RESTful Web API built with **Node.js** and **Express** that se
 | Technology | Purpose |
 |---|---|
 | [Node.js](https://nodejs.org/) | JavaScript runtime |
-| [Express](https://expressjs.com/) | HTTP routing and middleware |
+| [Express](https://expressjs.com/) | HTTP routing |
 | [SQLite](https://www.sqlite.org/) | File-based relational database (`songs-2026.db`) |
 | [sqlite3](https://www.npmjs.com/package/sqlite3) | Node.js SQLite bindings |
 | [Render](https://render.com/) | Cloud hosting for the Node server |

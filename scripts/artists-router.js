@@ -66,7 +66,7 @@ function handleArtistRef(app) {
     app.get('/api/artists/:ref', async (req, resp) => {
         try {
             const ref = req.params.ref;
-            const rows = await dbAll(AVERAGES_SQL + "WHERE a.artist_id=?", [ref]);
+            const rows = await dbAll(ARTIST_SQL + "WHERE a.artist_id=?", [ref]);
             if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `artist of id '${ref}' was not found` });
         } catch (error) {
@@ -89,7 +89,7 @@ function handleArtistRefAverage(app) {
     app.get('/api/artists/averages/:ref', async (req, resp) => {
         try {
             const ref = req.params.ref;
-            const rows = await dbAll(averagesSql, [ref]);
+            const rows = await dbAll(AVERAGES_SQL, [ref]);
             if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `artist of id '${ref}' was not found` });
         } catch (error) {

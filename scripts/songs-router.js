@@ -79,8 +79,8 @@ function handleSongsRef(app) {
 function handleSongsSearchBegin(app) {
     app.get('/api/songs/search/begin/:substring', async (req, resp) => {
         try {
-            const substring = `${req.params.substring.toUpperCase()}%`;
-            const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", [substring]);
+            const substring = req.params.substring.toUpperCase();
+            const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", [substring + "%"]);
             if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `song ${substring} was not found` });
         } catch (error) {
@@ -93,8 +93,8 @@ function handleSongsSearchBegin(app) {
 function handleSongsSearchAny(app) {
     app.get('/api/songs/search/any/:substring', async (req, resp) => {
         try {
-            const substring = `%${req.params.substring.toUpperCase()}%`;
-            const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", [substring]);
+            const substring = req.params.substring.toUpperCase();
+            const rows = await dbAll(SONG_SQL + "WHERE UPPER(s.title) LIKE ?", ["%" + substring + "%"]);
             if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `song ${substring} was not found` });
         } catch (error) {

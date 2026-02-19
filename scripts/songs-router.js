@@ -109,7 +109,7 @@ function handleSongsSearchYear(app) {
         try {
             const substring = req.params.substring;
             const rows = await dbAll(SONG_SQL + "WHERE s.year LIKE ?", [substring]);
-            if (rows.length > 0) resp.json(row);
+            if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `song ${substring} was not found` });
         } catch (error) {
             console.error(error.message);

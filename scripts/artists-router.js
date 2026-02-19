@@ -46,7 +46,7 @@ const AVERAGES_SQL = `
 function handleAllArtist(app) {
     app.get('/api/artists', async (req, resp) => {
         try {
-            const rows = await dbAll(ARTIST_SQL + "ORDER BY 2");
+            const rows = await dbAll(ARTIST_SQL + "ORDER BY a.artist_name");
             resp.json(rows);
         } catch (error) {
             console.error(error.message);

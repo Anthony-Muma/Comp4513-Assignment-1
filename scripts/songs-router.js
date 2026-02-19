@@ -34,7 +34,7 @@ const SONG_SQL = `
 function handleAllSongs(app) {
     app.get('/api/songs', async (req, resp) => {
         try {
-            const rows = await dbAll(SONG_SQL + "ORDER BY 2");
+            const rows = await dbAll(SONG_SQL + "ORDER BY s.title");
             resp.json(rows);
         } catch (error) {
             console.error(error.message);

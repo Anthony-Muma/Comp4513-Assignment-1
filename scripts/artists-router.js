@@ -19,16 +19,17 @@ const ARTIST_SQL = `
 
 const AVERAGES_SQL = `
     SELECT
-        AVG(s.bpm) AS bpm,
-        AVG(s.energy) AS energy,
-        AVG(s.danceability) AS danceability,
-        AVG(s.loudness) AS loudness,
-        AVG(s.liveness) AS liveness,
-        AVG(s.valence) AS valence,
-        AVG(s.duration) AS duration,
-        AVG(s.acousticness) AS acousticness,
-        AVG(s.speechiness) AS speechiness,
-        AVG(s.popularity ) AS popularity
+        a.artist_name
+        ROUND(AVG(s.bpm), 2) AS avg_bpm,
+        ROUND(AVG(s.energy), 2) AS avg_energy,
+        ROUND(AVG(s.danceability), 2) AS avg_danceability,
+        ROUND(AVG(s.loudness), 2) AS avg_loudness,
+        ROUND(AVG(s.liveness), 2) AS avg_liveness,
+        ROUND(AVG(s.valence), 2) AS avg_valence,
+        ROUND(AVG(s.duration), 2) AS avg_duration,
+        ROUND(AVG(s.acousticness), 2) AS avg_acousticness,
+        ROUND(AVG(s.speechiness), 2) AS avg_speechiness,
+        ROUND(AVG(s.popularity), 2) AS avg_popularity
     FROM
         artists a
         JOIN songs s ON s.artist_id = a.artist_id

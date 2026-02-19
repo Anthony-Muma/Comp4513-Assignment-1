@@ -178,7 +178,7 @@ function handleSongsArtistRef(app) {
         try {
             const ref = req.params.ref;
             const rows = await dbAll(SONG_SQL + "WHERE s.artist_id=?", [ref]);
-            if (rows) resp.json(rows);
+            if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `songs written by artist '${ref}' were not found` });
         } catch (error) {
             console.error(error.message);

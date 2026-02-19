@@ -14,8 +14,6 @@ const PLAYLIST_SQL = `
         JOIN songs s ON s.song_id = p.song_id
         JOIN genres g ON g.genre_id = s.genre_id
         JOIN artists a ON a.artist_id = s.artist_id
-    WHERE 
-        p.playlist_id=?
 `;
 
 /**
@@ -31,9 +29,9 @@ const PLAYLIST_SQL = `
 function handlePlaylistsRef(app) {
     app.get('/api/playlists/:ref', async (req, resp) => {
         try {
-            const ref = [req.params.ref];
-            const rows = await dbAll(PLAYLIST_SQL, ref);
-            if (rows) resp.json(rows);
+            const ref = req.params.ref;
+            const rows = await dbAll(PLAYLIST_SQL + "WHERE p.playlist_id=?", [ref]);
+            if (rows.length > 0) resp.json(rows);
             else resp.status(400).json({ error: `playlist '${ref}' was not found` });
         } catch (error) {
             console.error(error.message);
